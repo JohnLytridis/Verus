@@ -5,7 +5,7 @@ LD = i386-elf-ld
 CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -Wall -Wextra
 LDFLAGS = -m elf_i386 -T linker.ld
 
-OBJS = boot/boot.o kernel/kernel.o kernel/vga.o kernel/idt.o kernel/pic.o kernel/keyboard.o
+OBJS = boot/boot.o kernel/kernel.o kernel/vga.o kernel/idt.o kernel/pic.o kernel/keyboard.o kernel/shell.o
 
 all: verus.bin
 
@@ -30,5 +30,8 @@ kernel/keyboard.o: kernel/keyboard.c kernel/keyboard.h
 verus.bin: $(OBJS) linker.ld
 	$(LD) $(LDFLAGS) -o verus.bin $(OBJS)
 
+kernel/shell.o: kernel/shell.c kernel/shell.h
+	$(CC) $(CFLAGS) -c kernel/shell.c -o kernel/shell.o
+
 clean:
-	rm -f boot/boot.o kernel/kernel.o kernel/vga.o kernel/idt.o kernel/pic.o kernel/keyboard.o verus.bin
+	rm -f boot/boot.o kernel/kernel.o kernel/vga.o kernel/idt.o kernel/pic.o kernel/keyboard.o verus.bin kernel/shell.o

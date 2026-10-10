@@ -4,13 +4,15 @@
 #include "keyboard.h"
 
 void kmain(void) {
-    vga_print("Hello, welcome to Verus!");
+    vga_clear();
+    vga_print("Hello, welcome to Verus!\n");
 
     idt_init();
     pic_remap();
     keyboard_init();
+    shell_init();
 
-    asm volatile ("sti"); // enable interrupts
+    asm volatile ("sti");
 
     while (1) {
     }

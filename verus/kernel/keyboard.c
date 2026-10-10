@@ -17,10 +17,13 @@ void keyboard_init(void) {
 void keyboard_handler(void) {
     unsigned char scancode = inb(0x60);
 
-    if (scancode < sizeof(scancode_to_ascii) && scancode_to_ascii[scancode]) {
-        char str[2] = { scancode_to_ascii[scancode], '\0' };
-        vga_print(str);
+    if (scancode == 0x0E) {
+        shell_input('\b');
+    } else if (scancode == 0x1C) {
+        shell_input('\n');
+    } else if (scancode < sizeof(scancode_to_ascii) && scancode_to_ascii[scancode]) {
+        shell_input(scancode_to_ascii[scancode]);
     }
 
-    outb(0x20, 0x20); // tell PIC the interrupt is handled
+    outb(0x20, 0x20);
 }
