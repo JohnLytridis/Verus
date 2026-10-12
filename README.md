@@ -16,6 +16,8 @@ An x86 kernel mainly written in C and Assembly.
 
 - v0.1 — Initial Kernel
 - v0.2 — Keyboard Input
+- v0.2.5 — basic shell with commands
+  
 
 ## Goals
 
