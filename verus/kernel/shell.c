@@ -35,14 +35,18 @@ static void run_command(void) {
     }
 
     if (str_eq(input, "help")) {
-        vga_print("Commands: help, clear, about, echo <text>, invert, version, reboot, halt\n");
+        vga_print("Commands: help, clear, about, echo <text>, invert, version, reboot, halt, exit\n");
     } else if (str_eq(input, "clear")) {
         vga_clear();
     } else if (str_eq(input, "about")) {
         vga_print("Verus - a small kernel for you \n");
-    } else if (starts_with(input, "echo ")) {
+    } else if (starts_with(input, "echo")) {
+        if (input_len == 4) {
+            vga_print("\n");
+        } else {
         vga_print(input + 5);
         vga_putchar('\n');
+        }
     } else if (str_eq(input, "invert")) {
         inverted = !inverted;
         vga_set_color(inverted ? 0x70 : 0x0F);
@@ -55,6 +59,8 @@ static void run_command(void) {
         while (1) {
             asm volatile ("cli; hlt");
         }
+    } else if (str_eq(input, "exit")) {
+        outw(0x604,0x2000);
     } else {
         vga_print("Unknown command: ");
         vga_print(input);
