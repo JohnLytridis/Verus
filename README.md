@@ -28,6 +28,7 @@ An x86 kernel mainly written in C and Assembly.
 - Program execution
 - More operating-system functionality over time
 
+
 ## Testing
 Verus can be tested using QEMU, or more simply, using a VM.
 
