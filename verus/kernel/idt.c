@@ -35,6 +35,8 @@ void idt_init(void) {
         idt_set_gate(i, 0, 0, 0);
     }
     extern void irq1_handler(void);
-idt_set_gate(33, (unsigned int)irq1_handler, 0x08, 0x8E);
+    unsigned short cs;
+    asm volatile ("mov %%cs, %0" : "=r"(cs));
+idt_set_gate(33, (unsigned int)irq1_handler, cs, 0x8E);
     idt_load((unsigned int)&idtp);
 }

@@ -1,7 +1,6 @@
 # build output
 *.o
 *.bin
-*.iso
 
 # editor and tooling
 compile_commands.json
