@@ -28,13 +28,18 @@ An x86 kernel mainly written in C and Assembly.
 - Program execution
 - More operating-system functionality over time
 
-## Testing with QEMU
+## Testing
+Verus can be tested using QEMU, or more simply, using a VM.
 
-Verus can be tested using QEMU.
+#### QEMU
 
-### Command
-
+##### For QEMU, you will need a C compiler for i386, and `make`
 ```bash
+cd verus
+make
 qemu-system-i386 -kernel verus.bin
+```
 
+#### VMs
+You can add this in any VM to try it out, using verus.iso.
  
