@@ -1,0 +1,25 @@
+Verus merged source tree
+
+The two input directories (Verus/ and verus/) contained different revisions
+of the same kernel. This output integrates the source-level changes rather
+than choosing one file wholesale.
+
+Integration decisions:
+- Kept the more complete interrupt/exception implementation, multiboot
+  entry point, timer, memory reporting, shell history, Shift/Caps Lock, and
+  expanded shell from Verus/.
+- Integrated the lowercase revision's Verus 0.3 version, QEMU exit command
+  (outw to port 0x604), its user-facing startup/help wording, and its outw
+  I/O helper.
+- Kept IRQ0 and IRQ1 unmasked because the retained PIT uptime feature needs
+  the timer interrupt. The lowercase revision's PIC mask disabled IRQ0.
+- Used the uppercase revision's Multiboot boot code because it passes the
+  Multiboot magic and info pointer required by mem_init().
+- Source files are authoritative. Existing .o, .d, and .bin files from the
+  two revisions are retained only as original build artifacts and may be
+  stale; rebuild with `make clean && make` before testing.
+
+This is a source integration, not a guarantee of runtime correctness. The
+build should be tested with the project's i386-elf toolchain and booted in
+QEMU/GRUB. In particular, the `exit` command assumes QEMU's isa-debug-exit
+device is configured; without it, that port write has no useful effect.

@@ -8,7 +8,7 @@
 
 void kmain(unsigned int magic, unsigned int mbi) {
     vga_clear();
-    vga_print("Hello, welcome to Verus!\n");
+    vga_print("Hello, welcome to Verus!\nType 'help' for available commands.\n");
 
     mem_init(magic, mbi);
     idt_init();

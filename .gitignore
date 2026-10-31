@@ -5,3 +5,4 @@
 # editor and tooling
 compile_commands.json
 .cache/
+*.d

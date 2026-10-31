@@ -162,13 +162,15 @@ static void run_command(void) {
     }
 
     if (str_eq(input, "help")) {
-        vga_print("Commands: help, clear, about, echo <text>, invert, version,\n");
+        vga_print("Commands: help, clear, about, echo [text], invert, version, exit,\n");
         vga_print("          reboot, halt, color <name>, banner, cpu, add <a> <b>,\n");
-        vga_print("          uptime, meminfo, crash\n");
+        vga_print("          uptime, meminfo, crash, reboot, halt\n");
     } else if (str_eq(input, "clear")) {
         vga_clear();
     } else if (str_eq(input, "about")) {
-        vga_print("Verus -  Best kernel out there \n");
+        vga_print("Verus - a small kernel for you\n");
+    } else if (str_eq(input, "echo")) {
+        vga_putchar('\n');
     } else if (starts_with(input, "echo ")) {
         vga_print(input + 5);
         vga_putchar('\n');
@@ -205,7 +207,9 @@ static void run_command(void) {
         print_int(a + b);
         vga_putchar('\n');
     } else if (str_eq(input, "version")) {
-        vga_print("Verus 0.2.5\n");
+        vga_print("Verus 0.3\n");
+    } else if (str_eq(input, "exit")) {
+        outw(0x604, 0x2000);
     } else if (str_eq(input, "reboot")) {
         outb(0x64, 0xFE);
     } else if (str_eq(input, "halt")) {
