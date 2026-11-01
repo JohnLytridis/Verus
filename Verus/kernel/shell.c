@@ -3,6 +3,7 @@
 #include "shell.h"
 #include "vga.h"
 #include "io.h"
+#include "acpi.h"
 
 #define INPUT_MAX 128
 #define HISTORY_SIZE 16
@@ -177,6 +178,8 @@ static void run_command(void) {
     } else if (str_eq(input, "invert")) {
         inverted = !inverted;
         apply_color();
+    } else if (str_eq(input,"acpi")) {
+        acpi_info();
     } else if (starts_with(input, "color ")) {
         const char *name = input + 6;
         int found = 0;
@@ -209,7 +212,9 @@ static void run_command(void) {
     } else if (str_eq(input, "version")) {
         vga_print("Verus 0.3\n");
     } else if (str_eq(input, "exit")) {
-        outw(0x604, 0x2000);
+        vga_print("Shutting down...\n");
+        acpi_shutdown();
+        vga_print("Shutdown failed.\n");
     } else if (str_eq(input, "reboot")) {
         outb(0x64, 0xFE);
     } else if (str_eq(input, "halt")) {
@@ -243,7 +248,7 @@ static void run_command(void) {
     } else if (str_eq(input, "crash")) {
         volatile int zero = 0;
         volatile int x = 1 / zero;
-        (void)x;    
+        (void)x;
     } else {
         vga_print("Unknown command: ");
         vga_print(input);

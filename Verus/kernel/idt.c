@@ -96,9 +96,13 @@ void exception_handler(struct regs *r) {
 }
 
 static void idt_set_gate(int num, unsigned int base, unsigned short sel, unsigned char flags) {
+    unsigned short cs;
+    asm volatile ("mov %%cs, %0" : "=r"(cs));
+    (void)sel;                      // ignore what the caller passed
+
     idt[num].base_low = base & 0xFFFF;
     idt[num].base_high = (base >> 16) & 0xFFFF;
-    idt[num].sel = sel;
+    idt[num].sel = cs;              // always the segment we're running in
     idt[num].always0 = 0;
     idt[num].flags = flags;
 }
@@ -109,6 +113,9 @@ extern void irq0_handler(void);
 extern void irq1_handler(void);
 
 void idt_init(void) {
+    unsigned short cs;
+    asm volatile ("mov %%cs, %0" : "=r"(cs));
+
     idtp.limit = (sizeof(struct idt_entry) * IDT_ENTRIES) - 1;
     idtp.base = (unsigned int)&idt;
 
@@ -118,12 +125,12 @@ void idt_init(void) {
 
     /* CPU exceptions: vectors 0-31 */
     for (int i = 0; i < 32; i++) {
-        idt_set_gate(i, isr_stub_table[i], 0x08, 0x8E);
+        idt_set_gate(i, isr_stub_table[i], cs, 0x8E);
     }
 
     /* Hardware interrupts */
-    idt_set_gate(32, (unsigned int)irq0_handler, 0x08, 0x8E);  /* timer */
-    idt_set_gate(33, (unsigned int)irq1_handler, 0x08, 0x8E);  /* keyboard */
+    idt_set_gate(32, (unsigned int)irq0_handler, cs, 0x8E);  /* timer */
+    idt_set_gate(33, (unsigned int)irq1_handler, cs, 0x8E);  /* keyboard */
 
     idt_load((unsigned int)&idtp);
 }

@@ -6,7 +6,7 @@ CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -Wall -Wextra -MMD
 LDFLAGS = -m elf_i386 -T linker.ld
 
 OBJS = boot/boot.o kernel/kernel.o kernel/vga.o kernel/idt.o kernel/pic.o \
-       kernel/keyboard.o kernel/shell.o kernel/pit.o kernel/mem.o
+       kernel/keyboard.o kernel/shell.o kernel/pit.o kernel/mem.o kernel/acpi.o
 
 .PHONY: all run iso clean
 
@@ -17,6 +17,9 @@ boot/boot.o: boot/boot.s
 
 kernel/%.o: kernel/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+kernel/acpi.o: kernel/acpi.c kernel/acpi.h kernel/io.h
+	$(CC) $(CFLAGS) -c kernel/acpi.c -o kernel/acpi.o
 
 verus.bin: $(OBJS) linker.ld
 	$(LD) $(LDFLAGS) -o verus.bin $(OBJS)
@@ -31,4 +34,4 @@ iso: verus.bin
 	grub-mkrescue -o verus.iso isodir
 
 clean:
-	rm -f boot/*.o kernel/*.o kernel/*.d verus.bin verus.iso
+	rm -f boot/*.o kernel/*.o kernel/*.d verus.bin kernel/acpi.o
