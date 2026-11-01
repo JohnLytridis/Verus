@@ -210,7 +210,7 @@ static void run_command(void) {
         print_int(a + b);
         vga_putchar('\n');
     } else if (str_eq(input, "version")) {
-        vga_print("Verus 0.3\n");
+        vga_print("Verus 0.2.7\n");
     } else if (str_eq(input, "exit")) {
         vga_print("Shutting down...\n");
         acpi_shutdown();
